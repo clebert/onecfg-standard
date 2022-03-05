@@ -20,7 +20,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "preprepare": "tsc --module es2020 --moduleResolution node --declaration --outDir lib src/index.ts ",
+    "preprepare": "tsc --declaration --esModuleInterop --module es2020 --moduleResolution node --outDir lib src/index.ts ",
     "prepare": "node onecfg.js",
     "release": "npm version",
     "postrelease": "git push --follow-tags",
