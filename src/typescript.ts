@@ -87,7 +87,6 @@ export const typescript = ({
           ],
           '@typescript-eslint/no-duplicate-imports': `error`,
           '@typescript-eslint/no-floating-promises': `error`,
-          '@typescript-eslint/no-require-imports': `error`,
           '@typescript-eslint/no-shadow': [`error`, {hoist: `all`}],
           '@typescript-eslint/promise-function-async': `error`,
           '@typescript-eslint/quotes': [`error`, `backtick`],

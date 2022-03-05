@@ -41,6 +41,8 @@ export const eslint = (): readonly AnyFileStatement[] => [
         ],
       },
       overrides: [
+        {files: [`**/*.cjs`], parserOptions: {sourceType: `script`}},
+        {files: [`**/*.mjs`], parserOptions: {sourceType: `module`}},
         {files: [`**/*.md`], processor: `markdown/markdown`},
         {files: [`**/*.md/*.js`], rules: {quotes: [`error`, `single`]}},
       ],

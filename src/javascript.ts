@@ -36,6 +36,15 @@ export const javascript = ({
           ? [`error`, `always`, {ignorePackages: true}]
           : `off`,
     },
+    overrides: [
+      {
+        files: [`src/**/*.ts`, `src/**/*.tsx`],
+        rules: {
+          '@typescript-eslint/no-require-imports':
+            moduleType !== `commonjs` ? `error` : `off`,
+        },
+      },
+    ],
   }),
 
   mergeContent(
