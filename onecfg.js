@@ -21,7 +21,9 @@ onecfg(
   ...eslint(),
   ...git(),
   ...github(),
-  ...javascript({ecmaVersion: `es2021`, moduleType: `es2020`}),
+  ...javascript({
+    target: {ecmaVersion: `es2021`, moduleType: `es2020`, node: true},
+  }),
   ...jest(),
   ...node({nodeVersion: `16`}),
   ...npm(),
