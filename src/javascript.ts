@@ -6,15 +6,20 @@ import {swc} from './swc.js';
 import {typescript} from './typescript.js';
 
 export interface JavascriptOptions {
-  readonly target: {
-    readonly ecmaVersion: EcmaVersion;
-    readonly moduleType: ModuleType;
-    readonly node?: boolean;
-  };
+  readonly target:
+    | {
+        readonly ecmaVersion: EcmaVersion;
+        readonly moduleType: 'commonjs';
+      }
+    | {
+        readonly ecmaVersion: EcmaVersion;
+        readonly moduleType: 'es2015' | 'es2020' | 'es2022';
+        readonly node?: boolean;
+      };
 
   readonly source?: {
     readonly ecmaVersion: EcmaVersion;
-    readonly moduleType: ModuleType;
+    readonly moduleType: 'commonjs' | 'es2015' | 'es2020' | 'es2022';
   };
 }
 
@@ -30,8 +35,6 @@ export type EcmaVersion =
   | 'es2021' // 12
   | 'es2022'; // 13;
 
-export type ModuleType = 'commonjs' | 'es2015' | 'es2020' | 'es2022';
-
 export const javascript = ({
   target,
   source = target,
@@ -43,7 +46,7 @@ export const javascript = ({
     },
     rules: {
       'import/extensions':
-        target.node && target.moduleType !== `commonjs`
+        target.moduleType !== `commonjs` && target.node
           ? [`error`, `always`, {ignorePackages: true}]
           : `off`,
     },
@@ -60,7 +63,7 @@ export const javascript = ({
 
   mergeContent(
     jest.configFile,
-    target.node && target.moduleType !== `commonjs`
+    target.moduleType !== `commonjs` && target.node
       ? {
           extensionsToTreatAsEsm: [`.ts`, `.tsx`],
           moduleNameMapper: {'^(\\.{1,2}/.*)\\.js$': `$1`},
