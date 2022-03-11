@@ -92,6 +92,7 @@ export const typescript = ({
           '@typescript-eslint/quotes': [`error`, `backtick`],
           '@typescript-eslint/require-await': `error`,
           'no-duplicate-imports': `off`,
+          'no-shadow': `off`,
           'quotes': `off`,
         },
       },
