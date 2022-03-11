@@ -4,7 +4,7 @@ import {git} from './git.js';
 import {prettier} from './prettier.js';
 
 export interface VscodeOptions {
-  readonly showFilesInEditor?: boolean;
+  readonly showAllFilesInEditor?: boolean;
 }
 
 const extensionsFile = defineJsonFile(`.vscode/extensions.json`, {});
@@ -12,7 +12,7 @@ const settingsFile = defineJsonFile(`.vscode/settings.json`, {});
 
 /** https://code.visualstudio.com */
 export const vscode = ({
-  showFilesInEditor,
+  showAllFilesInEditor,
 }: VscodeOptions = {}): readonly AnyFileStatement[] => [
   extensionsFile,
   settingsFile,
@@ -25,7 +25,7 @@ export const vscode = ({
 
   mergeContent(
     settingsFile,
-    showFilesInEditor ? {'files.exclude': undefined} : {},
+    showAllFilesInEditor ? {'files.exclude': undefined} : {},
     {priority: 1},
   ),
 
