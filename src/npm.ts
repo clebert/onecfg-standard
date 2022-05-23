@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineTextFile, mergeContent} from 'onecfg';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
@@ -8,7 +8,7 @@ import {vscode} from './vscode.js';
 const configFile = defineTextFile(`.npmrc`, [`# ${headerComment}`]);
 
 /** https://www.npmjs.com */
-export const npm = (): readonly AnyFileStatement[] => [
+export const npm = (): readonly FileStatement[] => [
   configFile,
 
   mergeContent(git.ignoreFile, [`node_modules`]),

@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineYamlFile, mergeContent} from 'onecfg';
 import {headerComment} from './header-comment.js';
 import {node} from './node.js';
@@ -14,7 +14,7 @@ const ciFile = defineYamlFile(`.github/workflows/ci.yml`, {}, {headerComment});
 export const github = ({
   branches = [`main`],
   omitReleaseStep,
-}: GithubOptions = {}): readonly AnyFileStatement[] => [
+}: GithubOptions = {}): readonly FileStatement[] => [
   ciFile,
 
   mergeContent(

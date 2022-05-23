@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineJsonFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
@@ -22,7 +22,7 @@ export const typescript = ({
   outDir,
   sourceMap,
   lib,
-}: TypescriptOptions = {}): readonly AnyFileStatement[] => [
+}: TypescriptOptions = {}): readonly FileStatement[] => [
   configFile,
 
   mergeContent(

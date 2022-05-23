@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineJsonFile, defineTextFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
@@ -22,7 +22,7 @@ const vscodeLanguages = [
 const vscodeExtensionName = `esbenp.prettier-vscode`;
 
 /** https://prettier.io */
-export const prettier = (): readonly AnyFileStatement[] => [
+export const prettier = (): readonly FileStatement[] => [
   configFile,
   ignoreFile,
 

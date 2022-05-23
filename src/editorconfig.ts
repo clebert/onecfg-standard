@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineTextFile, mergeContent} from 'onecfg';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
@@ -7,7 +7,7 @@ import {vscode} from './vscode.js';
 const configFile = defineTextFile(`.editorconfig`, [`# ${headerComment}`]);
 
 /** https://editorconfig.org */
-export const editorconfig = (): readonly AnyFileStatement[] => [
+export const editorconfig = (): readonly FileStatement[] => [
   configFile,
 
   mergeContent(

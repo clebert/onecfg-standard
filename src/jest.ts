@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineJsonFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
@@ -8,7 +8,7 @@ import {vscode} from './vscode.js';
 const configFile = defineJsonFile(`jest.config.json`, {});
 
 /** https://jestjs.io */
-export const jest = (): readonly AnyFileStatement[] => [
+export const jest = (): readonly FileStatement[] => [
   configFile,
 
   mergeContent(

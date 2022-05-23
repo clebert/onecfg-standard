@@ -1,6 +1,6 @@
 // @ts-check
 
-import {onecfg} from 'onecfg';
+import {writeFiles} from 'onecfg';
 import {
   editorconfig,
   eslint,
@@ -16,7 +16,7 @@ import {
   vscode,
 } from './lib/index.js';
 
-onecfg(
+writeFiles(
   ...editorconfig(),
   ...eslint(),
   ...git(),

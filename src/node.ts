@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineTextFile, mergeContent} from 'onecfg';
 import {vscode} from './vscode.js';
 
@@ -9,9 +9,7 @@ export interface NodeOptions {
 const versionFile = defineTextFile(`.node-version`, []);
 
 /** https://nodejs.org */
-export const node = ({
-  nodeVersion,
-}: NodeOptions): readonly AnyFileStatement[] => [
+export const node = ({nodeVersion}: NodeOptions): readonly FileStatement[] => [
   versionFile,
 
   mergeContent(versionFile, [nodeVersion], {priority: -1}),

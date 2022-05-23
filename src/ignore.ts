@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
@@ -7,7 +7,7 @@ import {vscode} from './vscode.js';
 
 export const ignore = (
   ...patterns: readonly string[]
-): readonly AnyFileStatement[] => [
+): readonly FileStatement[] => [
   mergeContent(eslint.ignoreFile, patterns),
   mergeContent(git.ignoreFile, patterns),
   mergeContent(prettier.ignoreFile, patterns),

@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {jest} from './jest.js';
@@ -38,7 +38,7 @@ export type EcmaVersion =
 export const javascript = ({
   target,
   source = target,
-}: JavascriptOptions): readonly AnyFileStatement[] => [
+}: JavascriptOptions): readonly FileStatement[] => [
   mergeContent(eslint.configFile, {
     parserOptions: {
       ecmaVersion: parseInt(source.ecmaVersion.slice(2), 10),

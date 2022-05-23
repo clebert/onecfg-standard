@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineJsonFile, mergeContent} from 'onecfg';
 import {git} from './git.js';
 import {prettier} from './prettier.js';
@@ -13,7 +13,7 @@ const settingsFile = defineJsonFile(`.vscode/settings.json`, {});
 /** https://code.visualstudio.com */
 export const vscode = ({
   showAllFilesInEditor,
-}: VscodeOptions = {}): readonly AnyFileStatement[] => [
+}: VscodeOptions = {}): readonly FileStatement[] => [
   extensionsFile,
   settingsFile,
 

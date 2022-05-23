@@ -1,4 +1,4 @@
-import type {AnyFileStatement} from 'onecfg';
+import type {FileStatement} from 'onecfg';
 import {defineJsonFile, defineTextFile, mergeContent} from 'onecfg';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
@@ -9,7 +9,7 @@ const configFile = defineJsonFile(`.eslintrc.json`, {});
 const ignoreFile = defineTextFile(`.eslintignore`, [`# ${headerComment}`]);
 
 /** https://eslint.org */
-export const eslint = (): readonly AnyFileStatement[] => [
+export const eslint = (): readonly FileStatement[] => [
   configFile,
   ignoreFile,
 
