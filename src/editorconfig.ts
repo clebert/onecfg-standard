@@ -25,16 +25,10 @@ export const editorconfig = (): readonly FileStatement[] => [
     {priority: -1},
   ),
 
-  mergeContent(git.ignoreFile, [configFile.path]),
-
-  mergeContent(vscode.extensionsFile, {
-    recommendations: [`editorconfig.editorconfig`],
-  }),
-
-  mergeContent(vscode.settingsFile, {
-    'editor.formatOnSave': true,
-    'files.exclude': {[configFile.path]: true},
-  }),
+  git.ignore(configFile.path),
+  vscode.addExtensions(`editorconfig.editorconfig`),
+  vscode.exclude(configFile.path),
+  mergeContent(vscode.settingsFile, {'editor.formatOnSave': true}),
 ];
 
 editorconfig.configFile = configFile;

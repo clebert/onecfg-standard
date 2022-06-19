@@ -3,7 +3,6 @@ export * from './eslint.js';
 export * from './git.js';
 export * from './github.js';
 export * from './ignore.js';
-export * from './javascript.js';
 export * from './jest.js';
 export * from './node.js';
 export * from './npm.js';

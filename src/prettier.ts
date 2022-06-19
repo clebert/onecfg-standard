@@ -1,4 +1,4 @@
-import type {FileStatement} from 'onecfg';
+import type {FileChange, FileStatement} from 'onecfg';
 import {defineJsonFile, defineTextFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
@@ -41,8 +41,9 @@ export const prettier = (): readonly FileStatement[] => [
 
   mergeContent(ignoreFile, [configFile.path], {priority: -1}),
   mergeContent(eslint.configFile, {extends: [`prettier`]}),
-  mergeContent(git.ignoreFile, [configFile.path, ignoreFile.path]),
-  mergeContent(vscode.extensionsFile, {recommendations: [vscodeExtensionName]}),
+  git.ignore(configFile.path, ignoreFile.path),
+  vscode.addExtensions(vscodeExtensionName),
+  vscode.exclude(configFile.path, ignoreFile.path),
 
   mergeContent(vscode.settingsFile, {
     ...Object.fromEntries(
@@ -52,9 +53,19 @@ export const prettier = (): readonly FileStatement[] => [
       ]),
     ),
     'editor.formatOnSave': true,
-    'files.exclude': {[configFile.path]: true, [ignoreFile.path]: true},
   }),
 ];
+
+prettier.ignore = (
+  ...patterns: readonly (string | undefined | false)[]
+): FileChange<readonly string[]> =>
+  mergeContent(
+    ignoreFile,
+    patterns.filter(
+      (pattern): pattern is string => typeof pattern === `string`,
+    ),
+    {dedupeArrays: true},
+  );
 
 prettier.configFile = configFile;
 prettier.ignoreFile = ignoreFile;

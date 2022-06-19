@@ -1,4 +1,4 @@
-import type {FileStatement} from 'onecfg';
+import type {FileChange, FileStatement} from 'onecfg';
 import {defineJsonFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
@@ -8,71 +8,117 @@ import {swc} from './swc.js';
 import {vscode} from './vscode.js';
 
 export interface TypescriptOptions {
-  readonly declaration?: boolean;
-  readonly outDir?: string;
-  readonly sourceMap?: boolean | 'inline';
+  readonly target: `es20${number}`;
+  readonly emit?: true | TypescriptEmitOptions;
   readonly lib?: readonly string[];
 }
 
+export interface TypescriptEmitOptions {
+  readonly noIncremental?: boolean;
+  readonly noDeclaration?: boolean;
+  readonly noSourceMaps?: boolean;
+  readonly inlineSourceMaps?: boolean;
+}
+
+const baseCompilerOptions = {
+  // Type checking
+  allowUnreachableCode: false,
+  allowUnusedLabels: false,
+  noFallthroughCasesInSwitch: true,
+  noImplicitOverride: true,
+  noImplicitReturns: true,
+  noUncheckedIndexedAccess: true,
+  noUnusedLocals: true,
+  noUnusedParameters: true,
+  strict: true,
+
+  // Modules
+  module: `node16`,
+  moduleResolution: `node16`,
+
+  // Emit
+  importsNotUsedAsValues: `error`,
+
+  // Interop constraints
+  esModuleInterop: true,
+  forceConsistentCasingInFileNames: true,
+  isolatedModules: true,
+};
+
 const configFile = defineJsonFile(`tsconfig.json`, {});
+const emitConfigFile = defineJsonFile(`tsconfig.emit.json`, {});
+
+function mergeEmitConfigFile({
+  target,
+  lib,
+  noIncremental,
+  noDeclaration,
+  noSourceMaps,
+  inlineSourceMaps,
+}: TypescriptEmitOptions &
+  Pick<TypescriptOptions, 'target' | 'lib'>): readonly FileStatement[] {
+  return [
+    emitConfigFile,
+
+    mergeContent(
+      emitConfigFile,
+      {
+        compilerOptions: {
+          ...baseCompilerOptions,
+          target,
+          lib,
+          incremental: !noIncremental,
+          declaration: !noDeclaration,
+          outDir: `lib`,
+          rootDir: `src`,
+
+          ...(noSourceMaps
+            ? {}
+            : inlineSourceMaps
+            ? {inlineSources: true, inlineSourceMap: true}
+            : {inlineSources: true, sourceMap: true}),
+        },
+        include: [`src/**/*`],
+      },
+      {priority: -1},
+    ),
+  ];
+}
 
 /** https://www.typescriptlang.org */
 export const typescript = ({
-  declaration = false,
-  outDir,
-  sourceMap,
+  target,
+  emit,
   lib,
-}: TypescriptOptions = {}): readonly FileStatement[] => [
+}: TypescriptOptions): readonly FileStatement[] => [
   configFile,
 
   mergeContent(
     configFile,
     {
       compilerOptions: {
-        // Type checking
-        allowUnreachableCode: false,
-        allowUnusedLabels: false,
-        noFallthroughCasesInSwitch: true,
-        noImplicitOverride: true,
-        noImplicitReturns: true,
-        noUncheckedIndexedAccess: true,
-        noUnusedLocals: true,
-        noUnusedParameters: true,
-        strict: true,
-
-        // Modules
-        moduleResolution: `node`,
-        rootDir: `src`,
-
-        // Emit
-        declaration,
-        importsNotUsedAsValues: `error`,
-        ...(outDir ? {outDir} : {noEmit: true}),
-
-        ...(sourceMap === `inline`
-          ? {inlineSources: true, inlineSourceMap: true}
-          : sourceMap
-          ? {inlineSources: true, sourceMap: true}
-          : {}),
-
-        // Interop constraints
-        esModuleInterop: true,
-        forceConsistentCasingInFileNames: true,
-        isolatedModules: true,
-
-        // Language and environment
+        ...baseCompilerOptions,
+        target,
         lib,
+        noEmit: true,
+        resolveJsonModule: true,
+        checkJs: true,
       },
-      include: [`src/**/*.ts`, `src/**/*.tsx`],
+      include: [`**/*`],
+      exclude: emit ? [`lib`] : [],
     },
     {priority: -1},
   ),
+
+  ...(emit
+    ? mergeEmitConfigFile({target, lib, ...(emit === true ? {} : emit)})
+    : []),
 
   mergeContent(eslint.configFile, {
     plugins: [`@typescript-eslint`],
     overrides: [
       {
-        files: [`src/**/*.ts`, `src/**/*.tsx`],
+        files: [`**/*.ts`, `**/*.tsx`],
         parser: `@typescript-eslint/parser`,
         parserOptions: {project: configFile.path},
         rules: {
@@ -85,13 +131,12 @@ export const typescript = ({
             `error`,
             {allowDirectConstAssertionInArrowFunctions: true},
           ],
-          '@typescript-eslint/no-duplicate-imports': `error`,
           '@typescript-eslint/no-floating-promises': `error`,
+          '@typescript-eslint/no-require-imports': `error`,
           '@typescript-eslint/no-shadow': [`error`, {hoist: `all`}],
           '@typescript-eslint/promise-function-async': `error`,
           '@typescript-eslint/quotes': [`error`, `backtick`],
           '@typescript-eslint/require-await': `error`,
-          'no-duplicate-imports': `off`,
           'no-shadow': `off`,
           'quotes': `off`,
         },
@@ -99,34 +144,70 @@ export const typescript = ({
     ],
   }),
 
-  mergeContent(eslint.ignoreFile, outDir ? [outDir] : []),
+  eslint.ignore(emit ? `lib` : undefined),
 
-  mergeContent(git.ignoreFile, [
+  git.ignore(
     configFile.path,
-    `tsconfig.tsbuildinfo`,
-    ...(outDir ? [outDir] : []),
-  ]),
+    ...(emit
+      ? [
+          emitConfigFile.path,
+          emitConfigFile.path.replace(`json`, `tsbuildinfo`),
+          `lib`,
+        ]
+      : []),
+  ),
 
-  mergeContent(jest.configFile, {transform: {'^.+\\.tsx?$': [`@swc/jest`]}}),
+  mergeContent(
+    jest.configFile,
+    {
+      extensionsToTreatAsEsm: [`.ts`, `.tsx`],
+      moduleNameMapper: {'^(\\.{1,2}/.*)\\.js$': `$1`},
+      transform: {'^.+\\.tsx?$': [`@swc/jest`]},
+    },
+    {dedupeArrays: true},
+  ),
 
-  mergeContent(prettier.ignoreFile, [
+  mergeContent(
+    jest.configFile,
+    {testMatch: [`**/src/**/*.test.{ts,tsx}`]},
+    {replaceArrays: true},
+  ),
+
+  prettier.ignore(
     configFile.path,
-    ...(outDir ? [outDir] : []),
-  ]),
+    ...(emit ? [emitConfigFile.path, `lib`] : []),
+  ),
 
-  mergeContent(swc.configFile, {
-    jsc: {parser: {syntax: `typescript`}},
-    sourceMaps: Boolean(sourceMap),
-  }),
+  mergeContent(swc.configFile, {jsc: {parser: {syntax: `typescript`}}}),
+
+  vscode.exclude(
+    configFile.path,
+    ...(emit
+      ? [
+          emitConfigFile.path,
+          emitConfigFile.path.replace(`json`, `tsbuildinfo`),
+          `lib`,
+        ]
+      : []),
+  ),
 
   mergeContent(vscode.settingsFile, {
-    'files.exclude': {
-      [configFile.path]: true,
-      'tsconfig.tsbuildinfo': true,
-      ...(outDir ? {[outDir]: true} : {}),
-    },
     'typescript.tsdk': `node_modules/typescript/lib`,
   }),
 ];
 
+typescript.exclude = (
+  ...patterns: readonly (string | undefined | false)[]
+): FileChange<object> =>
+  mergeContent(
+    configFile,
+    {
+      exclude: patterns.filter(
+        (pattern): pattern is string => typeof pattern === `string`,
+      ),
+    },
+    {dedupeArrays: true},
+  );
+
 typescript.configFile = configFile;
+typescript.emitConfigFile = emitConfigFile;

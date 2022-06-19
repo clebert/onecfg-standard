@@ -15,34 +15,35 @@
     "lib"
   ],
   "scripts": {
-    "ci": "run-p compile format:check lint test",
-    "compile": "tsc --pretty",
+    "ci": "run-p check-types compile format:check lint test",
+    "check-types": "tsc --pretty",
+    "compile": "tsc --pretty --project tsconfig.emit.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "preprepare": "tsc --declaration --esModuleInterop --module es2020 --moduleResolution node --outDir lib src/index.ts ",
+    "preprepare": "tsc --declaration --esModuleInterop --module node16 --moduleResolution node16 --outDir lib src/index.ts ",
     "prepare": "node onecfg.js",
     "release": "npm version",
     "postrelease": "git push --follow-tags",
     "test": "jest --silent --passWithNoTests"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.189",
+    "@swc/core": "^1.2.204",
     "@swc/jest": "^0.2.21",
-    "@types/jest": "^27.5.1",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
-    "eslint": "^8.16.0",
+    "@types/jest": "^28.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-markdown": "^2.2.1",
-    "jest": "^28.1.0",
+    "jest": "^28.1.1",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.6.2",
-    "typescript": "^4.6.4"
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "onecfg": "^5.0.0"
+    "onecfg": "^5.2.0"
   },
   "publishConfig": {
     "access": "public"

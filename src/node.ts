@@ -3,7 +3,7 @@ import {defineTextFile, mergeContent} from 'onecfg';
 import {vscode} from './vscode.js';
 
 export interface NodeOptions {
-  readonly nodeVersion: string;
+  readonly nodeVersion: '16' | '18';
 }
 
 const versionFile = defineTextFile(`.node-version`, []);
@@ -11,12 +11,8 @@ const versionFile = defineTextFile(`.node-version`, []);
 /** https://nodejs.org */
 export const node = ({nodeVersion}: NodeOptions): readonly FileStatement[] => [
   versionFile,
-
   mergeContent(versionFile, [nodeVersion], {priority: -1}),
-
-  mergeContent(vscode.settingsFile, {
-    'files.exclude': {[versionFile.path]: true},
-  }),
+  vscode.exclude(versionFile.path),
 ];
 
 node.versionFile = versionFile;

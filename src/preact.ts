@@ -14,4 +14,8 @@ export const preact = (): readonly FileStatement[] => [
   mergeContent(typescript.configFile, {
     compilerOptions: {jsx: `react-jsx`, jsxImportSource: `preact`},
   }),
+
+  mergeContent(typescript.emitConfigFile, {
+    compilerOptions: {jsx: `react-jsx`, jsxImportSource: `preact`},
+  }),
 ];

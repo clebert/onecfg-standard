@@ -6,4 +6,5 @@ import {typescript} from './typescript.js';
 export const react = (): readonly FileStatement[] => [
   mergeContent(swc.configFile, {jsc: {parser: {tsx: true}}}),
   mergeContent(typescript.configFile, {compilerOptions: {jsx: `react`}}),
+  mergeContent(typescript.emitConfigFile, {compilerOptions: {jsx: `react`}}),
 ];

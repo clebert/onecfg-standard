@@ -2,6 +2,7 @@ import type {FileStatement} from 'onecfg';
 import {defineYamlFile, mergeContent} from 'onecfg';
 import {headerComment} from './header-comment.js';
 import {node} from './node.js';
+import {typescript} from './typescript.js';
 import {vscode} from './vscode.js';
 
 export interface GithubOptions {
@@ -55,7 +56,8 @@ export const github = ({
     {priority: -1},
   ),
 
-  mergeContent(vscode.settingsFile, {'files.exclude': {'.github': true}}),
+  typescript.exclude(`.github`),
+  vscode.exclude(`.github`),
 ];
 
 github.ciFile = ciFile;
