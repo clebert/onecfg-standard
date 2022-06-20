@@ -1,10 +1,5 @@
 import type {FileStatement} from 'onecfg';
-import {
-  defineJsonFile,
-  defineTextFile,
-  mergeContent,
-  replaceContent,
-} from 'onecfg';
+import {defineJsonFile, defineTextFile, replaceContent} from 'onecfg';
 import {sortPackageJson} from 'sort-package-json';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
@@ -19,7 +14,6 @@ const packageFile = defineJsonFile(`package.json`, {}, {tryReadFile: true});
 export const npm = (): readonly FileStatement[] => [
   configFile,
   packageFile,
-  mergeContent(packageFile, {type: `module`}, {priority: -1}),
 
   replaceContent(packageFile, (content) => sortPackageJson(content), {
     priority: 1,

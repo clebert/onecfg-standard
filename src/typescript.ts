@@ -3,6 +3,7 @@ import {defineJsonFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
 import {jest} from './jest.js';
+import {npm} from './npm.js';
 import {prettier} from './prettier.js';
 import {swc} from './swc.js';
 import {vscode} from './vscode.js';
@@ -172,6 +173,8 @@ export const typescript = ({
     {testMatch: [`**/src/**/*.test.{ts,tsx}`]},
     {replaceArrays: true},
   ),
+
+  mergeContent(npm.packageFile, {type: `module`}),
 
   prettier.ignore(
     configFile.path,
