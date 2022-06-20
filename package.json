@@ -27,6 +27,9 @@
     "postrelease": "git push --follow-tags",
     "test": "jest --silent --passWithNoTests"
   },
+  "dependencies": {
+    "sort-package-json": "^1.57.0"
+  },
   "devDependencies": {
     "@swc/core": "^1.2.204",
     "@swc/jest": "^0.2.21",
