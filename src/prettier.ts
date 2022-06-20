@@ -3,6 +3,7 @@ import {defineJsonFile, defineTextFile, mergeContent} from 'onecfg';
 import {eslint} from './eslint.js';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
+import {npm} from './npm.js';
 import {vscode} from './vscode.js';
 
 const configFile = defineJsonFile(`.prettierrc.json`, {});
@@ -42,6 +43,14 @@ export const prettier = (): readonly FileStatement[] => [
   mergeContent(ignoreFile, [configFile.path], {priority: -1}),
   mergeContent(eslint.configFile, {extends: [`prettier`]}),
   git.ignore(configFile.path, ignoreFile.path),
+
+  mergeContent(npm.packageFile, {
+    scripts: {
+      'format:check': `prettier --check .`,
+      'format:write': `prettier --write .`,
+    },
+  }),
+
   vscode.addExtensions(vscodeExtensionName),
   vscode.exclude(configFile.path, ignoreFile.path),
 

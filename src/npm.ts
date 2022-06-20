@@ -1,5 +1,10 @@
 import type {FileStatement} from 'onecfg';
-import {defineJsonFile, defineTextFile, replaceContent} from 'onecfg';
+import {
+  defineJsonFile,
+  defineTextFile,
+  mergeContent,
+  replaceContent,
+} from 'onecfg';
 import {sortPackageJson} from 'sort-package-json';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
@@ -15,8 +20,27 @@ export const npm = (): readonly FileStatement[] => [
   configFile,
   packageFile,
 
+  mergeContent(
+    packageFile,
+    {
+      scripts: {
+        'prepare': `node onecfg.js`,
+        'ci': undefined,
+        'compile:check': undefined,
+        'compile:emit': undefined,
+        'format:check': undefined,
+        'format:write': undefined,
+        'lint': undefined,
+        'test': undefined,
+        'release': undefined,
+        'postrelease': undefined,
+      },
+    },
+    {priority: -1},
+  ),
+
   replaceContent(packageFile, (content) => sortPackageJson(content), {
-    priority: 1,
+    priority: 2,
   }),
 
   git.ignore(`node_modules`),

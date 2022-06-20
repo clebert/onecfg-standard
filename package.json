@@ -15,17 +15,17 @@
     "lib"
   ],
   "scripts": {
-    "ci": "run-p check-types compile format:check lint test",
-    "check-types": "tsc --pretty",
-    "compile": "tsc --pretty --project tsconfig.emit.json",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "lint": "eslint .",
-    "preprepare": "tsc --declaration --esModuleInterop --module node16 --moduleResolution node16 --outDir lib src/index.ts ",
+    "preprepare": "tsc --declaration --esModuleInterop --module node16 --outDir lib src/index.ts",
     "prepare": "node onecfg.js",
+    "ci": "run-p compile:check compile:emit format:check lint test",
+    "compile:check": "tsc --pretty",
+    "compile:emit": "tsc --pretty --project tsconfig.emit.json",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "lint": "eslint .",
+    "test": "jest --silent --passWithNoTests",
     "release": "npm version",
-    "postrelease": "git push --follow-tags",
-    "test": "jest --silent --passWithNoTests"
+    "postrelease": "git push --follow-tags"
   },
   "dependencies": {
     "sort-package-json": "^1.57.0"
@@ -46,7 +46,7 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "onecfg": "^5.2.0"
+    "onecfg": "^5.2.1"
   },
   "publishConfig": {
     "access": "public"

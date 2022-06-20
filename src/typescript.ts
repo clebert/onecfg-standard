@@ -10,7 +10,7 @@ import {vscode} from './vscode.js';
 
 export interface TypescriptOptions {
   readonly target: `es20${number}`;
-  readonly emit?: true | TypescriptEmitOptions;
+  readonly emit?: boolean | TypescriptEmitOptions;
   readonly lib?: readonly string[];
 }
 
@@ -111,8 +111,18 @@ export const typescript = ({
     {priority: -1},
   ),
 
+  mergeContent(npm.packageFile, {scripts: {'compile:check': `tsc --pretty`}}),
+
   ...(emit
-    ? mergeEmitConfigFile({target, lib, ...(emit === true ? {} : emit)})
+    ? [
+        ...mergeEmitConfigFile({target, lib, ...(emit === true ? {} : emit)}),
+
+        mergeContent(npm.packageFile, {
+          scripts: {
+            'compile:emit': `tsc --pretty --project tsconfig.emit.json`,
+          },
+        }),
+      ]
     : []),
 
   mergeContent(eslint.configFile, {

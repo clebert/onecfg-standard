@@ -15,31 +15,41 @@ npm install @onecfg/standard
 import {writeFiles} from 'onecfg';
 ```
 
-Recommended `package.json` script:
-
-- `"prepare": "node onecfg.js"`
-
 ### Basic configuration
 
 ```js
-import {editorconfig, git, node, npm, prettier, vscode} from '@onecfg/standard';
+import {editorconfig, git, node, npm, vscode} from '@onecfg/standard';
 
 writeFiles(
   ...editorconfig(),
   ...git(),
   ...node({nodeVersion: '18'}),
   ...npm(),
-  ...prettier(),
   ...vscode({includeFilesInExplorer: false}),
 );
 ```
 
-Recommended `package.json` scripts:
+Injects the following `package.json` script:
 
-- `"format": "prettier --write ."`
-- `"format:check": "prettier --check ."`
+- `prepare`
 
-npm dependency:
+### Prettier configuration
+
+```js
+import {prettier} from '@onecfg/standard';
+
+writeFiles(
+  // ... basic configuration
+  ...prettier(),
+);
+```
+
+Injects the following `package.json` scripts:
+
+- `format:check`
+- `format:write`
+
+Requires the following npm dev dependency:
 
 - `prettier`
 
@@ -54,11 +64,11 @@ writeFiles(
 );
 ```
 
-Recommended `package.json` script:
+Injects the following `package.json` script:
 
-- `"lint": "eslint ."`
+- `lint`
 
-npm dependencies:
+Requires the following npm dev dependencies:
 
 - `eslint`
 - `eslint-config-prettier` (if `prettier()` is configured)
@@ -78,13 +88,12 @@ writeFiles(
 );
 ```
 
-Recommended `package.json` scripts:
+Injects the following `package.json` scripts:
 
-- `"check-types": "tsc --pretty"`
-- `"compile": "tsc --pretty --project tsconfig.emit.json"` (if `emit` is
-  enabled)
+- `compile:check`
+- `compile:emit` (if `emit` is enabled)
 
-npm dependency:
+Requires the following npm dev dependency:
 
 - `typescript`
 
@@ -115,11 +124,11 @@ writeFiles(
 );
 ```
 
-Recommended `package.json` script:
+Injects the following `package.json` script:
 
-- `"test": "jest --silent"`
+- `test`
 
-npm dependencies:
+Requires the following npm dev dependencies:
 
 - `jest`
 - `@swc/core` (if `swc()` is configured)

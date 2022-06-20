@@ -2,6 +2,7 @@ import type {FileChange, FileStatement} from 'onecfg';
 import {defineJsonFile, defineTextFile, mergeContent} from 'onecfg';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
+import {npm} from './npm.js';
 import {prettier} from './prettier.js';
 import {vscode} from './vscode.js';
 
@@ -54,6 +55,7 @@ export const eslint = (): readonly FileStatement[] => [
   ),
 
   git.ignore(configFile.path, ignoreFile.path),
+  mergeContent(npm.packageFile, {scripts: {lint: `eslint .`}}),
   prettier.ignore(configFile.path),
   vscode.addExtensions(`dbaeumer.vscode-eslint`),
   vscode.exclude(configFile.path, ignoreFile.path),
