@@ -24,6 +24,7 @@ export const eslint = (): readonly FileStatement[] => [
         'complexity': `error`,
         'curly': `error`,
         'eqeqeq': [`error`, `always`, {null: `ignore`}],
+        'import/no-commonjs': `error`,
         'import/extensions': [`error`, `always`, {ignorePackages: true}],
         'import/no-duplicates': [`error`, {considerQueryString: true}],
         'import/no-extraneous-dependencies': `error`,
@@ -45,7 +46,11 @@ export const eslint = (): readonly FileStatement[] => [
         ],
       },
       overrides: [
-        {files: [`**/*.cjs`], parserOptions: {sourceType: `script`}},
+        {
+          files: [`**/*.cjs`],
+          parserOptions: {sourceType: `script`},
+          rules: {'import/no-commonjs': `off`, 'import/extensions': `off`},
+        },
         {files: [`**/*.mjs`], parserOptions: {sourceType: `module`}},
         {files: [`**/*.md`], processor: `markdown/markdown`},
         {files: [`**/*.md/*.js`], rules: {quotes: [`error`, `single`]}},
