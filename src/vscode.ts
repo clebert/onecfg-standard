@@ -22,7 +22,6 @@ export const vscode = ({
     settingsFile,
     {
       'editor.codeActionsOnSave': {'source.addMissingImports': true},
-      'explorer.excludeGitIgnore': true,
       'files.exclude': {'**/.DS_Store': true, '.vscode': true},
     },
     {priority: -1},
@@ -30,9 +29,7 @@ export const vscode = ({
 
   mergeContent(
     settingsFile,
-    includeFilesInExplorer
-      ? {'explorer.excludeGitIgnore': false, 'files.exclude': undefined}
-      : {},
+    includeFilesInExplorer ? {'files.exclude': undefined} : {},
     {priority: 1},
   ),
 
