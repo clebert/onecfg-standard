@@ -22,11 +22,13 @@ export function ignore(
 
   for (let pattern of patterns) {
     if (typeof pattern === `string`) {
-      git.ignore(pattern);
-      eslint.ignore(pattern);
-      prettier.ignore(pattern);
-      typescript.exclude(pattern);
-      vscode.exclude(pattern);
+      fileChanges.push(
+        git.ignore(pattern),
+        eslint.ignore(pattern),
+        prettier.ignore(pattern),
+        typescript.exclude(pattern),
+        vscode.exclude(pattern),
+      );
     } else {
       const {
         noGitIgnore,
@@ -39,23 +41,23 @@ export function ignore(
       pattern = pattern[0];
 
       if (!noGitIgnore) {
-        git.ignore(pattern);
+        fileChanges.push(git.ignore(pattern));
       }
 
       if (!noEslintIgnore) {
-        eslint.ignore(pattern);
+        fileChanges.push(eslint.ignore(pattern));
       }
 
       if (!noPrettierIgnore) {
-        prettier.ignore(pattern);
+        fileChanges.push(prettier.ignore(pattern));
       }
 
       if (!noTypescriptExclude) {
-        typescript.exclude(pattern);
+        fileChanges.push(typescript.exclude(pattern));
       }
 
       if (!noVscodeExclude) {
-        vscode.exclude(pattern);
+        fileChanges.push(vscode.exclude(pattern));
       }
     }
   }
