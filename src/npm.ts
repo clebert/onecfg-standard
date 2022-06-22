@@ -19,6 +19,7 @@ const packageFile = defineJsonFile(`package.json`, {}, {tryReadFile: true});
 export const npm = (): readonly FileStatement[] => [
   configFile,
   packageFile,
+  mergeContent(packageFile, {scripts: undefined}, {priority: -1}),
 
   mergeContent(
     packageFile,

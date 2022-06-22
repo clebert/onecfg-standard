@@ -1,4 +1,4 @@
-import {writeFiles} from 'onecfg';
+import {mergeContent, writeFiles} from 'onecfg';
 import {
   editorconfig,
   eslint,
@@ -27,4 +27,10 @@ writeFiles(
   ...swc({target}),
   ...typescript({target, emit: true}),
   ...vscode({includeFilesInExplorer: false}),
+
+  mergeContent(npm.packageFile, {
+    scripts: {
+      preprepare: `tsc --declaration --esModuleInterop --module node16 --outDir lib src/index.ts`,
+    },
+  }),
 );
