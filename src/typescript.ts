@@ -222,5 +222,12 @@ typescript.exclude = (
     {dedupeArrays: true},
   );
 
+typescript.mergeCompilerOptions = (
+  compilerOptions: object,
+): [FileChange<object>, FileChange<object>] => [
+  mergeContent(configFile, {compilerOptions}),
+  mergeContent(emitConfigFile, {compilerOptions}),
+];
+
 typescript.configFile = configFile;
 typescript.emitConfigFile = emitConfigFile;
