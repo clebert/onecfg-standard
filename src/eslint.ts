@@ -36,6 +36,17 @@ export const eslint = (): readonly FileStatement[] => [
             'warnOnUnassignedImports': true,
           },
         ],
+        'no-restricted-globals': [
+          `error`,
+          {
+            name: `__dirname`,
+            message: `Use \`dirname(fileURLToPath(import.meta.url))\` instead.`,
+          },
+          {
+            name: `__filename`,
+            message: `Use \`fileURLToPath(import.meta.url)\` instead.`,
+          },
+        ],
         'no-shadow': `error`,
         'object-shorthand': `error`,
         'prefer-const': `error`,
@@ -49,7 +60,11 @@ export const eslint = (): readonly FileStatement[] => [
         {
           files: [`**/*.cjs`],
           parserOptions: {sourceType: `script`},
-          rules: {'import/no-commonjs': `off`, 'import/extensions': `off`},
+          rules: {
+            'import/no-commonjs': `off`,
+            'import/extensions': `off`,
+            'no-restricted-globals': `off`,
+          },
         },
         {files: [`**/*.mjs`], parserOptions: {sourceType: `module`}},
         {files: [`**/*.md`], processor: `markdown/markdown`},
