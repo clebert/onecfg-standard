@@ -43,7 +43,9 @@ export const jest = ({
   git.ignore(configFile.path, `coverage`),
 
   mergeContent(npm.packageFile, {
-    scripts: {test: `jest --silent --passWithNoTests`},
+    scripts: {
+      test: `NODE_OPTIONS=--experimental-vm-modules jest --silent --passWithNoTests`,
+    },
   }),
 
   prettier.ignore(configFile.path, `coverage`),

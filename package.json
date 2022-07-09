@@ -23,7 +23,7 @@
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint": "eslint .",
-    "test": "jest --silent --passWithNoTests",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --silent --passWithNoTests",
     "release": "npm version",
     "postrelease": "git push --follow-tags"
   },
@@ -31,9 +31,9 @@
     "sort-package-json": "^1.57.0"
   },
   "devDependencies": {
+    "@jest/globals": "^28.1.2",
     "@swc/core": "^1.2.204",
     "@swc/jest": "^0.2.21",
-    "@types/jest": "^28.1.1",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "eslint": "^8.18.0",
@@ -50,5 +50,12 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "wallaby": {
+    "env": {
+      "params": {
+        "runner": "--experimental-vm-modules"
+      }
+    }
   }
 }

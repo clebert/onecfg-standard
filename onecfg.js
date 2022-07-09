@@ -11,6 +11,7 @@ import {
   swc,
   typescript,
   vscode,
+  wallaby,
 } from './lib/index.js';
 
 const target = `es2022`;
@@ -27,6 +28,7 @@ writeFiles(
   ...swc({target}),
   ...typescript({target, emit: true}),
   ...vscode({includeFilesInExplorer: false}),
+  ...wallaby(),
 
   mergeContent(npm.packageFile, {
     scripts: {

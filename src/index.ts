@@ -12,3 +12,4 @@ export * from './react.js';
 export * from './swc.js';
 export * from './typescript.js';
 export * from './vscode.js';
+export * from './wallaby.js';
