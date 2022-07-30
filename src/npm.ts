@@ -46,7 +46,7 @@ export const npm = (): readonly FileStatement[] => [
 
   git.ignore(`node_modules`),
   prettier.ignore(`package-lock.json`),
-  typescript.exclude(`node_modules`),
+  typescript.exclude(`node_modules`, `package-lock.json`),
   vscode.addExtensions(`eg2.vscode-npm-script`),
   vscode.exclude(`node_modules`, configFile.path, `package-lock.json`),
 ];

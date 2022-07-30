@@ -48,6 +48,7 @@ const baseCompilerOptions = {
 
 const configFile = defineJsonFile(`tsconfig.json`, {});
 const emitConfigFile = defineJsonFile(`tsconfig.emit.json`, {});
+const eslintConfigFile = defineJsonFile(`tsconfig.eslint.json`, {});
 
 function mergeEmitConfigFile({
   target,
@@ -125,13 +126,20 @@ export const typescript = ({
       ]
     : []),
 
+  eslintConfigFile,
+
+  mergeContent(eslintConfigFile, {
+    extends: `./tsconfig.json`,
+    include: [`**/*.ts`, `**/*.tsx`],
+  }),
+
   mergeContent(eslint.configFile, {
     plugins: [`@typescript-eslint`],
     overrides: [
       {
         files: [`**/*.ts`, `**/*.tsx`],
         parser: `@typescript-eslint/parser`,
-        parserOptions: {project: configFile.path},
+        parserOptions: {project: eslintConfigFile.path},
         rules: {
           '@typescript-eslint/await-thenable': `error`,
           '@typescript-eslint/consistent-type-imports': [
@@ -159,6 +167,7 @@ export const typescript = ({
 
   git.ignore(
     configFile.path,
+    eslintConfigFile.path,
     ...(emit
       ? [
           emitConfigFile.path,
@@ -188,6 +197,7 @@ export const typescript = ({
 
   prettier.ignore(
     configFile.path,
+    eslintConfigFile.path,
     ...(emit ? [emitConfigFile.path, `lib`] : []),
   ),
 
@@ -195,6 +205,7 @@ export const typescript = ({
 
   vscode.exclude(
     configFile.path,
+    eslintConfigFile.path,
     ...(emit
       ? [
           emitConfigFile.path,
@@ -230,4 +241,5 @@ typescript.mergeCompilerOptions = (
 ];
 
 typescript.configFile = configFile;
+typescript.eslintConfigFile = eslintConfigFile;
 typescript.emitConfigFile = emitConfigFile;
