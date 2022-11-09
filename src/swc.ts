@@ -23,12 +23,15 @@ export const swc = ({
   mergeContent(
     configFile,
     {
-      jsc: {target},
+      jsc: {
+        target,
+        minify: removeComments
+          ? {compress: false, format: {comments: false}}
+          : undefined,
+      },
+      minify: removeComments,
       module: {type: `es6`},
       sourceMaps: !noSourceMaps,
-      minify: removeComments
-        ? {compress: false, format: {comments: false}}
-        : undefined,
     },
     {priority: -1},
   ),
