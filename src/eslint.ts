@@ -18,7 +18,11 @@ export const eslint = (): readonly FileStatement[] => [
     configFile,
     {
       root: true,
-      parserOptions: {ecmaVersion: `latest`, sourceType: `module`},
+      parserOptions: {
+        ecmaFeatures: {jsx: true},
+        ecmaVersion: `latest`,
+        sourceType: `module`,
+      },
       plugins: [`eslint-plugin-import`, `markdown`],
       rules: {
         'complexity': `error`,
@@ -68,7 +72,10 @@ export const eslint = (): readonly FileStatement[] => [
         },
         {files: [`**/*.mjs`], parserOptions: {sourceType: `module`}},
         {files: [`**/*.md`], processor: `markdown/markdown`},
-        {files: [`**/*.md/*.js`], rules: {quotes: [`error`, `single`]}},
+        {
+          files: [`**/*.md/*.js`, `**/*.md/*.jsx`],
+          rules: {quotes: [`error`, `single`]},
+        },
       ],
     },
     {priority: -1},
