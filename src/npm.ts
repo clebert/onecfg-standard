@@ -5,7 +5,7 @@ import {
   mergeContent,
   replaceContent,
 } from 'onecfg';
-import {sortPackageJson} from 'sort-package-json';
+import sortPackageJson from 'sort-package-json';
 import {git} from './git.js';
 import {headerComment} from './header-comment.js';
 import {prettier} from './prettier.js';
