@@ -22,6 +22,7 @@ export const jest = ({
   mergeContent(
     configFile,
     {
+      clearMocks: true,
       collectCoverage: !noCoverage,
       coverageThreshold: !noCoverage
         ? {
