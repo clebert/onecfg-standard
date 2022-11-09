@@ -9,6 +9,7 @@ export * from './npm.js';
 export * from './preact.js';
 export * from './prettier.js';
 export * from './react.js';
+export * from './snugjs.js';
 export * from './swc.js';
 export * from './typescript.js';
 export * from './vscode.js';
