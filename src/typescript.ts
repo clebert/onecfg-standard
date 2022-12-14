@@ -44,6 +44,10 @@ const baseCompilerOptions = {
   esModuleInterop: true,
   forceConsistentCasingInFileNames: true,
   isolatedModules: true,
+
+  // Output Formatting
+  noErrorTruncation: true,
+  pretty: true,
 };
 
 const configFile = defineJsonFile(`tsconfig.json`, {});
@@ -112,7 +116,7 @@ export const typescript = ({
     {priority: -1},
   ),
 
-  mergeContent(npm.packageFile, {scripts: {'compile:check': `tsc --pretty`}}),
+  mergeContent(npm.packageFile, {scripts: {'compile:check': `tsc`}}),
 
   ...(emit
     ? [
@@ -120,7 +124,7 @@ export const typescript = ({
 
         mergeContent(npm.packageFile, {
           scripts: {
-            'compile:emit': `tsc --pretty --project tsconfig.emit.json`,
+            'compile:emit': `tsc --project tsconfig.emit.json`,
           },
         }),
       ]
