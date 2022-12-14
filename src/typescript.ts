@@ -154,6 +154,7 @@ export const typescript = ({
             `error`,
             {allowDirectConstAssertionInArrowFunctions: true},
           ],
+          '@typescript-eslint/no-duplicate-imports': `error`,
           '@typescript-eslint/no-floating-promises': `error`,
           '@typescript-eslint/no-require-imports': `error`,
           '@typescript-eslint/no-shadow': [`error`, {hoist: `all`}],
